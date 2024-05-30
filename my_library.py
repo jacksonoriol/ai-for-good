@@ -45,3 +45,27 @@ def metrics(zipped_list):
   new_dict = {'Precision': precision, 'Recall': recall, 'F1': f1, 'Accuracy': accuracy}
 
   return new_dict
+  
+def run_random_forest(train, test, target, n):
+  X = up_drop_column(train, target)
+  y = up_get_column(train, target)  
+
+  k_feature_table = up_drop_column(test, target)
+  k_actuals = up_get_column(test, target)  
+
+  clf = RandomForestClassifier(n_estimators=n, max_depth=2, random_state=0)
+
+  clf.fit(X, y)  #builds the trees as specified above
+  probs = clf.predict_proba(k_feature_table)
+  pos_probs = [p for n,p in probs]  #probs is list of [neg,pos] like we are used to seeing.
+
+  all_mets = []
+  for t in thresholds:
+    all_predictions = [1 if pos>t else 0 for pos in pos_probs]
+    pred_act_list = up_zip_lists(all_predictions, k_actuals)
+    mets = metrics(pred_act_list)
+    mets['Threshold'] = t
+    all_mets = all_mets + [mets]
+
+  metrics_table = up_metrics_table(all_mets)
+  return metrics_table
