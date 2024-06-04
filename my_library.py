@@ -29,7 +29,8 @@ def metrics(zipped_list):
   assert isinstance(zipped_list,list), 'Parameter must be a list'
   assert all([isinstance(item, list) for item in zipped_list]), 'Parameter must be a list of lists'
   assert all([len(item) ==2 for item in zipped_list]), 'Parameter must be a zipped list of pairs'
-  assert all([isinstance(a, int) and isinstance(b, int) for a,b in zipped_list]), 'Parameter must contain all integers'
+  assert all([a>=0 and b>=0 for a,b in zipped_list]), 'Parameter must be greater or equal to zero.'
+  #assert all([isinstance(a, int) and isinstance(b, int) for a,b in zipped_list]), 'Parameter must contain all integers'
   for a,b in zipped_list:
    assert isinstance(a,(int,float)) and isinstance(b,(int,float)), f'zipped_list contains a non-int or non-float pair: {[a,b]}'
   for a,b in zipped_list:
